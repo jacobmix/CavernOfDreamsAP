@@ -8,14 +8,46 @@ namespace CoDArchipelago.LocationSplitPatches
 {
     static class GratitudeTeleports
     {
+        public static bool IsSunCavernPortal(Transform t)
+        {
+            var path = t.GetPath().Substring(1);
+
+            foreach (var info in gratitudeTeleportInfos) {
+                if (info.sunCavernTeleportPath == path) return true;
+                if (info.otherTeleportPath == path) return true;
+            }
+
+            return false;
+        }
+
+        readonly struct GratitudeTeleportInfo
+        {
+            public readonly string gratitudeFlag;
+            public readonly string teleportFlag;
+            public readonly string sunCavernTeleportPath;
+            public readonly string otherTeleportPath;
+
+            public GratitudeTeleportInfo(
+                string gratitudeFlag,
+                string teleportFlag,
+                string teleportName
+            ) {
+                this.gratitudeFlag = gratitudeFlag;
+                this.teleportFlag = teleportFlag;
+                this.sunCavernTeleportPath = $"CAVE/Sun Cavern (Main)/Fellas/Nest FellaHatchable {teleportName}/Portal";
+                this.otherTeleportPath = $"CAVE/{teleportName} Lobby/Warps/Portal";
+            }
+        }
+
+        static readonly List<GratitudeTeleportInfo> gratitudeTeleportInfos = new() {
+            new("GRATITUDE1", "TELEPORT_LAKE",    "Lake"),
+            new("GRATITUDE2", "TELEPORT_MONSTER", "Monster"),
+            new("GRATITUDE3", "TELEPORT_PALACE",  "Palace"),
+            new("GRATITUDE4", "TELEPORT_GALLERY", "Gallery"),
+        };
+
         public static class LinkGratitudeWithTeleports
         {
-            static readonly Dictionary<string, string> gratitudeTeleportFlagMap = new() {
-                {"GRATITUDE1", "TELEPORT_LAKE"},
-                {"GRATITUDE2", "TELEPORT_MONSTER"},
-                {"GRATITUDE3", "TELEPORT_PALACE"},
-                {"GRATITUDE4", "TELEPORT_GALLERY"},
-            };
             static Action<bool> SetTeleportFlagFactory(string teleportFlag) =>
                 gratitudeRandomized => new MyItem(teleportFlag, randomized: true).Collect();
 
@@ -24,50 +56,32 @@ namespace CoDArchipelago.LocationSplitPatches
 
             public static void RegisterLinks()
             {
-                foreach ((string gratitudeFlag, string teleportFlag) in gratitudeTeleportFlagMap) {
-                    RegisterGratitudeTeleportLink(gratitudeFlag, teleportFlag);
+                foreach (var info in gratitudeTeleportInfos) {
+                    RegisterGratitudeTeleportLink(info.gratitudeFlag, info.teleportFlag);
                 }
             }
         }
 
         class PatchTeleports : InstantiateOnGameSceneLoad
         {
-            public static readonly Dictionary<string, string> fellaNestTeleportMap = new() {
-                {"Nest FellaHatchable Lake",    "TELEPORT_LAKE"},
-                {"Nest FellaHatchable Monster", "TELEPORT_MONSTER"},
-                {"Nest FellaHatchable Palace",  "TELEPORT_PALACE"},
-                {"Nest FellaHatchable Gallery", "TELEPORT_GALLERY"},
-            };
-
-            static Action<bool> ActivatePortalFactory(Transform nestPortal)
+            static Action<bool> ActivatePortalFactory(Transform nestPortal, Transform otherPortal)
             {
-                Transform destinationPortal = nestPortal.GetComponent<WarpTrigger>().destination.transform.parent;
-
                 return randomized => {
-                    if (!randomized) {
-                        ShowPortal(nestPortal);
-                        return;
-                    }
-
                     Area area = GlobalHub.Instance.GetArea();
 
                     if (area.name == "Sun Cavern (Main)") {
                         ShowPortal(nestPortal);
-                    } else if (area.ContainsComponentInChildren(destinationPortal.GetComponent<WarpTrigger>(), includeInactive: true)) {
-                        ShowPortal(destinationPortal);
+                    } else if (area.ContainsComponentInChildren(otherPortal.GetComponent<WarpTrigger>(), includeInactive: true)) {
+                        ShowPortal(otherPortal);
                     }
                 };
             }
 
-            static void InitializePortal(Transform portal, string flag, bool withDestination = false)
+            static void InitializePortal(Transform portal, string flag)
             {
                 portal.GetComponent<TwoState>().flag = flag;
                 Transform modelHolder = portal.Find("PortalModelHolder");
                 modelHolder.GetComponent<TwoState>().flag = flag;
-
-                if (withDestination) {
-                    InitializePortal(portal.GetComponent<WarpTrigger>().destination.transform.parent, flag, false);
-                }
             }
 
             static void ShowPortal(Transform portal)
@@ -80,13 +94,14 @@ namespace CoDArchipelago.LocationSplitPatches
             [LoadOrder(-1)]
             public PatchTeleports()
             {
-                var fellas = GameScene.FindInScene("CAVE", "Sun Cavern (Main)/Fellas");
-                foreach ((string nestName, string teleportFlag) in fellaNestTeleportMap) {
-                    var nestPortal = fellas.Find(nestName + "/Portal");
+                foreach (var info in gratitudeTeleportInfos) {
+                    var nestPortal = GameScene.FindInSceneFullPath(info.sunCavernTeleportPath);
+                    var otherPortal = GameScene.FindInSceneFullPath(info.otherTeleportPath);
 
-                    InitializePortal(nestPortal, teleportFlag, withDestination: true);
+                    InitializePortal(nestPortal, info.teleportFlag);
+                    InitializePortal(otherPortal, info.teleportFlag);
 
-                    MyItem.RegisterTrigger(teleportFlag, ActivatePortalFactory(nestPortal));
+                    MyItem.RegisterTrigger(info.teleportFlag, ActivatePortalFactory(nestPortal, otherPortal));
                 }
             }
         }

@@ -1,8 +1,6 @@
 using HarmonyLib;
 using UnityEngine;
 using CoDArchipelago.GlobalGameScene;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CoDArchipelago.MiscPatches
 {
@@ -20,22 +18,6 @@ namespace CoDArchipelago.MiscPatches
             }
         }
 
-        static string[] sunCavernPortalPaths = new string[] {
-            "/CAVE/Sun Cavern (Main)/Fellas/Nest FellaHatchable Lake/Portal",
-            "/CAVE/Sun Cavern (Main)/Fellas/Nest FellaHatchable Monster/Portal",
-            "/CAVE/Sun Cavern (Main)/Fellas/Nest FellaHatchable Palace/Portal",
-            "/CAVE/Sun Cavern (Main)/Fellas/Nest FellaHatchable Gallery/Portal",
-            "/CAVE/Lake Lobby/Warps/Portal",
-            "/CAVE/Monster Lobby/Warps/Portal",
-            "/CAVE/Palace Lobby/Warps/Portal",
-            "/CAVE/Gallery Lobby/Warps/Portal",
-        };
-
-        static bool IsSunCavernPortal(Transform t)
-        {
-            return sunCavernPortalPaths.Contains(t.GetPath().Substring(1));
-        }
-
         [HarmonyPatch(typeof(WarpTrigger), "Warp")]
         static class RemoveBootsOnSunCavernPortalWarp
         {
@@ -47,7 +29,7 @@ namespace CoDArchipelago.MiscPatches
                 Player player = GlobalHub.Instance.player;
                 if (!player.WearingHoverBoots()) return;
 
-                if (!IsSunCavernPortal(__instance.transform)) return;
+                if (!LocationSplitPatches.GratitudeTeleports.IsSunCavernPortal(__instance.transform)) return;
 
                 GlobalHub.Instance.player.EquipHoverBoots(false, true);
             }
