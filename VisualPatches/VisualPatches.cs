@@ -141,6 +141,8 @@ namespace CoDArchipelago.VisualPatches
             var cols = GameScene.GetComponentsInChildren<Area>(true).SelectMany(area => area.GetComponentsInChildren<Collectible>(true));
 
             foreach (Collectible col in cols) {
+                if (col is HoverBoots hb) continue;
+
                 TwoState ts = col.GetComponent<TwoState>();
 
                 // Gallery lobby contains a fake egg. Its associated
