@@ -12,6 +12,11 @@ namespace CoDArchipelago.LocationSplitPatches
         {
             area = GameScene.FindInScene("DROWN", "Drown (Main)");
 
+            foreach (var grateName in new string[] {"Chomp", "Sinking", "Tiles"}) {
+                var grate = area.Find($"drown3/Grate{grateName}");
+                grate.GetComponent<TwoState>().flag = LOCATION_FLAG;
+            }
+
             fogBottom = area.Find("drown3/FogBottom").gameObject;
             fogTop = area.Find("drown3/FogTop").gameObject;
             debris = area.Find("FX/Debris").gameObject;
