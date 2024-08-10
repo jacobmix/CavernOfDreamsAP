@@ -7,7 +7,7 @@ namespace CoDArchipelago.LocationSplitPatches
     {
         readonly Transform area;
         static readonly string EGG_LOCATION_FLAG = "LOCATION_FELLA_CHALICE1";
-        static readonly string PILLAR_LOCATION_FLAG = "LOCATION_FELLA_CHALICE1";
+        static readonly string PILLAR_LOCATION_FLAG = "LOCATION_CHALICE_BRIDGE_ACTIVE";
         readonly ResetFireTraps resetFireTraps;
 
         public Chalice()
