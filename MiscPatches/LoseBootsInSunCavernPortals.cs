@@ -24,7 +24,7 @@ namespace CoDArchipelago.MiscPatches
             public static void Postfix(WarpTrigger __instance)
             {
                 // early-out to allow DropCarryablesOnWarp to do it instead
-                if (DropCarryablesOnWarp.shouldDropCarryables) return;
+                if (APClient.Client.SlotData.dropCarryables) return;
 
                 Player player = GlobalHub.Instance.player;
                 if (!player.WearingHoverBoots()) return;
