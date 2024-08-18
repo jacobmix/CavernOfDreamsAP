@@ -6,7 +6,7 @@ namespace CoDArchipelago.MiscPatches
 {
     static class DeathPatches
     {
-        enum WaterTeleportDeath {
+        public enum WaterTeleportDeath {
             WATER = 0xdead
         };
 
@@ -27,18 +27,6 @@ namespace CoDArchipelago.MiscPatches
             }
         }
 
-        // [HarmonyPatch(typeof(GlobalHub), "PlayerCanAct")]
-        // static class DiePatch2
-        // {
-        //     static bool Prefix(ref bool __result) {
-        //         if (isDying) {
-        //             __result = false;
-        //             return false;
-        //         }
-        //         return true;
-        //     }
-        // }
-
         static readonly Access.Field<Player, GameObject> model = new("model");
         static readonly Access.Field<Player, CharacterController> cc = new("cc");
 
@@ -48,19 +36,11 @@ namespace CoDArchipelago.MiscPatches
         static void HideFynn(Player player)
         {
             model.Get(player).SetActive(false);
-            // player.gameObject.SetActive(false);
-            // model.Get(player).transform.localPosition = new(0, -1000, 0);
-            // GetPlayerRenderer(player).enabled = false;
-            // cc.Get(player).enabled = false;
         }
 
         static void ShowFynn(Player player)
         {
             model.Get(player).SetActive(true);
-            // player.gameObject.SetActive(true);
-            // player.enabled = true;
-            // GetPlayerRenderer(player).enabled = true;
-            // cc.Get(player).enabled = true;
         }
 
         public static bool shouldSendDeathLink = true;

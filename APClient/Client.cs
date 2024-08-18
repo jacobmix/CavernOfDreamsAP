@@ -31,6 +31,8 @@ namespace CoDArchipelago.APClient
         static DeathLinkService deathLinkService;
         static int slot;
 
+        static bool deathLinkEnabled = false;
+
         // =====
         // initialization steps
         // =====
@@ -106,10 +108,12 @@ namespace CoDArchipelago.APClient
 
             session.MessageLog.OnMessageReceived += OnMessageReceived;
 
-            deathLinkService = session.CreateDeathLinkService();
-            deathLinkService.EnableDeathLink();
+            if (deathLinkEnabled) {
+                deathLinkService = session.CreateDeathLinkService();
+                deathLinkService.EnableDeathLink();
 
-            deathLinkService.OnDeathLinkReceived += OnDeathLinkReceived;
+                deathLinkService.OnDeathLinkReceived += OnDeathLinkReceived;
+            }
 
             tryConnectSuccess = true;
         }
@@ -142,6 +146,8 @@ namespace CoDArchipelago.APClient
             }
 
             NoFun.NoFun.enabled = !(bool)slotData["allowFun"];
+
+            deathLinkEnabled = (bool)slotData["deathLink"];
         }
 
         class StartGame : InstantiateOnGameSceneLoad
@@ -171,7 +177,17 @@ namespace CoDArchipelago.APClient
 
         public static void SendDeathLink(Kill.KillType killType)
         {
-            DeathLink deathLink = new(playerName);
+            if (!deathLinkEnabled) return;
+
+            string cause = "";
+            switch (killType) {
+                case Kill.KillType.DROWN: cause = $"{playerName} found the wrong liquid"; break;
+                case Kill.KillType.FALL: cause = $"{playerName} fell"; break;
+                case Kill.KillType.WOUND: cause = $"{playerName} got dunked on"; break;
+                case (Kill.KillType)MiscPatches.DeathPatches.WaterTeleportDeath.WATER: cause = $"{playerName} forgot how to swim"; break;
+            }
+
+            DeathLink deathLink = new(playerName, cause);
             deathLinkService.SendDeathLink(deathLink);
         }
 
@@ -274,7 +290,9 @@ namespace CoDArchipelago.APClient
             static void Postfix(MO_QUIT_GAME __instance)
             {
                 session.MessageLog.OnMessageReceived -= OnMessageReceived;
-                deathLinkService.OnDeathLinkReceived -= OnDeathLinkReceived;
+                if (deathLinkEnabled) {
+                    deathLinkService.OnDeathLinkReceived -= OnDeathLinkReceived;
+                }
                 session.Socket.DisconnectAsync();
                 mainThreadQueue = null;
                 deathLinkService = null;
