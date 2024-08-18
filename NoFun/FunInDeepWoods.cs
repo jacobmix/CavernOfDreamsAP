@@ -5,9 +5,9 @@ using CoDArchipelago.GlobalGameScene;
 
 namespace CoDArchipelago.NoFun
 {
-    class NoFunInDeepWoods : InstantiateOnGameSceneLoad
+    class FunInDeepWoods : InstantiateOnGameSceneLoad
     {
-        public static bool enabled = true;
+        public static bool insideDeepWoods = false;
 
         static bool wasInDeepWoodsLastFrame = false;
 
@@ -18,17 +18,15 @@ namespace CoDArchipelago.NoFun
                 var player = GlobalHub.Instance.player;
 
                 Vector3 position = player.transform.localPosition;
-                bool isInDeepWoods = position.z > 35 && position.x < -50;
+                insideDeepWoods = position.z > 35 && position.x < -50 && position.y < 11;
 
-                if (isInDeepWoods == wasInDeepWoodsLastFrame) return;
-                wasInDeepWoodsLastFrame = isInDeepWoods;
+                if (insideDeepWoods == wasInDeepWoodsLastFrame) return;
+                wasInDeepWoodsLastFrame = insideDeepWoods;
 
-                if (isInDeepWoods) {
+                if (insideDeepWoods) {
                     player.curiousSFX.Play();
-                    NoFunInDeepWoods.enabled = false;
                 } else {
                     player.whimperSFX.Play();
-                    NoFunInDeepWoods.enabled = true;
                 }
             }
         }
@@ -39,7 +37,7 @@ namespace CoDArchipelago.NoFun
             static void Postfix(WarpTrigger __instance)
             {
                 if (wasInDeepWoodsLastFrame) {
-                    NoFunInDeepWoods.enabled = false;
+                    insideDeepWoods = false;
                     wasInDeepWoodsLastFrame = false;
                     GlobalHub.Instance.player.whimperSFX.Play();
                 }
@@ -47,21 +45,21 @@ namespace CoDArchipelago.NoFun
         }
 
         [LoadOrder(Int32.MaxValue)]
-        public NoFunInDeepWoods()
+        public FunInDeepWoods()
         {
-            if (!NoFun.enabled) return;
+            if (APClient.Client.SlotData.allowFun) return;
 
-            var sign = PlaceNoFunSign();
+            var sign = PlaceFunSign();
 
             sign.AddComponent<DeepWoodsFunChecker>();
 
             MiscPatches.DialogPatches.RegisterDynamicDialogPatch(
                 "/DialogBaseCutscene(Clone)/DialogEvent",
-                DeepWoodsNoFunSign
+                DeepWoodsFunSign
             );
         }
 
-        static string DeepWoodsNoFunSign(Dialog dialog)
+        static string DeepWoodsFunSign(Dialog dialog)
         {
             if (isNoFunSign) {
                 isNoFunSign = false;
@@ -84,7 +82,7 @@ namespace CoDArchipelago.NoFun
             }
         }
 
-        static GameObject PlaceNoFunSign()
+        static GameObject PlaceFunSign()
         {
             var container = GameScene.FindInScene("LAKE", "Lake (Main)/lake2");
 

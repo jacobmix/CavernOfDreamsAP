@@ -4,14 +4,12 @@ namespace CoDArchipelago.MiscPatches
 {
     static class DropCarryablesOnWarp
     {
-        public static bool shouldDropCarryables = false;
-
         [HarmonyPatch(typeof(WarpTrigger), "Warp")]
         static class RemoveCarryablesOnWarp
         {
             public static void Postfix(WarpTrigger __instance)
             {
-                if (!shouldDropCarryables) return;
+                if (!APClient.Client.SlotData.dropCarryables) return;
 
                 Player player = GlobalHub.Instance.player;
                 if (!player.IsCarrying() && !player.WearingHoverBoots()) return;

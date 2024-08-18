@@ -7,12 +7,15 @@ namespace CoDArchipelago.NoFun
 {
     static class NoJesterBootsCarry
     {
+        static bool IsFunAllowed()
+            => APClient.Client.SlotData.allowFun || FunInDeepWoods.insideDeepWoods;
+
         [HarmonyPatch(typeof(HoverBoots), nameof(HoverBoots.Collect))]
         static class NoBootsIfCarrying
         {
             static bool Prefix(HoverBoots __instance)
             {
-                if (!NoFun.enabled || !NoFunInDeepWoods.enabled) return true;
+                if (IsFunAllowed()) return true;
 
                 Player player = GlobalHub.Instance.player;
 
@@ -31,7 +34,7 @@ namespace CoDArchipelago.NoFun
         {
             static bool Prefix(Player __instance, Carryable carryable)
             {
-                if (!NoFun.enabled || !NoFunInDeepWoods.enabled) return true;
+                if (IsFunAllowed()) return true;
 
                 if (__instance.WearingHoverBoots()) {
                     BootsDialogPatch.WarnCarry(carryable);

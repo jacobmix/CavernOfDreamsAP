@@ -31,8 +31,6 @@ namespace CoDArchipelago.APClient
         static DeathLinkService deathLinkService;
         static int slot;
 
-        static bool deathLinkEnabled = false;
-
         // =====
         // initialization steps
         // =====
@@ -108,7 +106,7 @@ namespace CoDArchipelago.APClient
 
             session.MessageLog.OnMessageReceived += OnMessageReceived;
 
-            if (deathLinkEnabled) {
+            if (SlotData.deathLink) {
                 deathLinkService = session.CreateDeathLinkService();
                 deathLinkService.EnableDeathLink();
 
@@ -116,6 +114,13 @@ namespace CoDArchipelago.APClient
             }
 
             tryConnectSuccess = true;
+        }
+
+        public static class SlotData
+        {
+            public static bool dropCarryables;
+            public static bool allowFun;
+            public static bool deathLink;
         }
 
         static void ProcessSlotData(Dictionary<string, object> slotData)
@@ -133,9 +138,6 @@ namespace CoDArchipelago.APClient
                 LocationSplitPatches.GratitudeTeleports.LinkGratitudeWithTeleports.RegisterLinks();
             }
 
-            bool dropCarryables = (bool)slotData["dropCarryables"];
-            MiscPatches.DropCarryablesOnWarp.shouldDropCarryables = dropCarryables;
-
             var pityItems = (List<string>)((JArray)slotData["pityItems"]).ToObject(typeof(List<string>));
             if (pityItems.Count > 0) {
                 string pityItemsStr = string.Join(", ", pityItems.Select(item => $"<color=#ee9999>{item}</color>"));
@@ -145,9 +147,11 @@ namespace CoDArchipelago.APClient
                 }));
             }
 
-            NoFun.NoFun.enabled = !(bool)slotData["allowFun"];
+            SlotData.dropCarryables = (bool)slotData["dropCarryables"];
 
-            deathLinkEnabled = (bool)slotData["deathLink"];
+            SlotData.allowFun = (bool)slotData["allowFun"];
+
+            SlotData.deathLink = (bool)slotData["deathLink"];
         }
 
         class StartGame : InstantiateOnGameSceneLoad
@@ -177,7 +181,7 @@ namespace CoDArchipelago.APClient
 
         public static void SendDeathLink(Kill.KillType killType)
         {
-            if (!deathLinkEnabled) return;
+            if (!SlotData.deathLink) return;
 
             string cause = "";
             switch (killType) {
@@ -290,7 +294,7 @@ namespace CoDArchipelago.APClient
             static void Postfix(MO_QUIT_GAME __instance)
             {
                 session.MessageLog.OnMessageReceived -= OnMessageReceived;
-                if (deathLinkEnabled) {
+                if (SlotData.deathLink) {
                     deathLinkService.OnDeathLinkReceived -= OnDeathLinkReceived;
                 }
                 session.Socket.DisconnectAsync();
