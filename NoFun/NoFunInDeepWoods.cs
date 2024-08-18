@@ -99,38 +99,5 @@ namespace CoDArchipelago.NoFun
 
             return sign;
         }
-
-        // static readonly string[] noteRingShrooms = new string[] {
-        //     "NoteLake",
-        //     "NoteLake (1)",
-        //     "NoteLake (2)",
-        //     "NoteLake (3)",
-        //     "NoteLake (4)",
-        //     "NoteLake (5)",
-        // };
-
-        // static void PlaceNoFunPlatforms()
-        // {
-        //     var container = GameScene.FindInScene("LAKE", "Lake (Main)/lake2");
-        //     var platform = GameObject.Instantiate(container.Find("DeepWoods_Gate"));
-        //     Component.DestroyImmediate(platform.GetComponent<RotateActivation>());
-        //     Component.DestroyImmediate(platform.GetComponent<InteractText>());
-
-        //     platform.localRotation = Quaternion.Euler(0, 0, 270);
-        //     platform.localScale = new(0.5f, 0.5f, 0.5f);
-
-        //     var shroomsContainer = GameScene.FindInScene("LAKE", "Lake (Main)/Collectibles/Notes/NoteRingCircle");
-        //     foreach (var shroomName in noteRingShrooms) {
-        //         var shroom = shroomsContainer.Find(shroomName);
-        //         var shroomPlatform = GameObject.Instantiate(platform.gameObject, shroomsContainer);
-        //         shroomPlatform.transform.localPosition = new(
-        //             shroom.localPosition.x,
-        //             shroom.localPosition.y - 0.5f,
-        //             shroom.localPosition.z + 0.5f
-        //         );
-        //     }
-
-        //     GameObject.DestroyImmediate(platform.gameObject);
-        // }
     }
 }
