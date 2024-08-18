@@ -111,9 +111,9 @@ namespace CoDArchipelago.MiscPatches
             if (entranceMap.Count == 0) return;
 
             foreach (var map in entranceMap) {
+                Debug.Log($"from {map[0]} to {map[1]}");
                 var fromPaths = Data.entrancePaths[map[0]];
                 var toPaths = Data.entrancePaths[map[1]];
-                Debug.Log($"from {map[0]} to {map[1]}");
                 Debug.Log($"{fromPaths.warpPath}");
                 Debug.Log($"{toPaths.destPath}");
 

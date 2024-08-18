@@ -36,6 +36,10 @@ namespace CoDArchipelago.VisualPatches
 
         static Cutscene _fellaCutscene;
         protected static Cutscene FellaCutscene {get => _fellaCutscene;}
+
+        static Cutscene _itemCutscene;
+        protected static Cutscene ItemCutscene {get => _itemCutscene;}
+
         class OnInit : InstantiateOnGameSceneLoad
         {
             [LoadOrder(int.MinValue)]
@@ -45,11 +49,29 @@ namespace CoDArchipelago.VisualPatches
                 container.SetActive(false);
                 _container = container.transform;
 
+                CreateFellaCutscene();
+                CreateItemCutscene();
+            }
+
+            static void CreateFellaCutscene()
+            {
                 Transform fellaCutsceneT = GameScene.FindInScene("CAVE", "Sun Cavern (Main)/Collectibles/Fella 2 (Waterfall)/GetFellaCutscene");
                 _fellaCutscene = fellaCutsceneT.GetComponent<Cutscene>();
                 Cutscenes.Patching.PatchCutscene(_fellaCutscene, Cutscenes.WLOptions.Interrupt, "PlayerGetItemPose");
                 fellaCutsceneT.GetComponentInChildren<CutscenePlayerAnimEvent>().start = 1;
                 fellaCutsceneT.SetParent(_container, false);
+            }
+
+            static void CreateItemCutscene()
+            {
+                Transform getItemCutsceneObject = GameScene.FindInScene("LAKE", "Bedroom/Cutscenes/GetFishFoodCutscene");
+                getItemCutsceneObject.GetComponentInChildren<CutscenePlayerAnimEvent>().start = 1;
+                getItemCutsceneObject.name = "GetItemCutscene";
+                getItemCutsceneObject.SetParent(_container, false);
+                _itemCutscene = getItemCutsceneObject.GetComponent<Cutscene>();
+                Cutscenes.Patching.PatchCutscene(_itemCutscene, Cutscenes.WLOptions.Interrupt, "PlayerGetItemPose");
+                _itemCutscene.durationAfterFinal = 45;
+                _itemCutscene.destroyOnFinish = false;
             }
         }
 

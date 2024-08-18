@@ -10,7 +10,7 @@ namespace CoDArchipelago.VisualPatches
 
         public override void CollectJingle()
         {
-            StockSFX.Instance.jingleCollectLarge.Play();
+            APResources.Instance.apJingleSmall.Play();
             GlobalHub.Instance.player.findSFX.Play();
         }
 
@@ -28,7 +28,7 @@ namespace CoDArchipelago.VisualPatches
             Collectible apMajorCollectible = staticReplacement.AddComponent<Collectible>();
             apMajorCollectible.type = Collectible.CollectibleType.FELLA;
             apMajorCollectible.model = staticReplacement.transform.Find("FellaHolder").gameObject;
-            apMajorCollectible.cutscene = FellaCutscene;
+            apMajorCollectible.cutscene = ItemCutscene;
 
             GameObject originalEgg = staticReplacement.transform.Find("FellaHolder/fella_egg").gameObject;
             while (originalEgg.transform.childCount > 0) {

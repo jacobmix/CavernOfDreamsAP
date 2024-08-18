@@ -3,18 +3,16 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 
-namespace CoDArchipelago.MiscPatches
+namespace CoDArchipelago.NoFun
 {
     static class NoJesterBootsCarry
     {
-        public static bool allowFun = false;
-
         [HarmonyPatch(typeof(HoverBoots), nameof(HoverBoots.Collect))]
         static class NoBootsIfCarrying
         {
             static bool Prefix(HoverBoots __instance)
             {
-                if (allowFun) return true;
+                if (!NoFun.enabled || !NoFunInDeepWoods.enabled) return true;
 
                 Player player = GlobalHub.Instance.player;
 
@@ -33,7 +31,7 @@ namespace CoDArchipelago.MiscPatches
         {
             static bool Prefix(Player __instance, Carryable carryable)
             {
-                if (allowFun) return true;
+                if (!NoFun.enabled || !NoFunInDeepWoods.enabled) return true;
 
                 if (__instance.WearingHoverBoots()) {
                     BootsDialogPatch.WarnCarry(carryable);
@@ -81,7 +79,7 @@ namespace CoDArchipelago.MiscPatches
             [LoadOrder(Int32.MaxValue)]
             public BootsDialogPatch()
             {
-                DialogPatches.RegisterDynamicDialogPatch(
+                MiscPatches.DialogPatches.RegisterDynamicDialogPatch(
                     "/Global Objects/Cutscenes/BootsWarnCutscene/HoverBootsTutorialDialog",
                     BootsWarningDialog
                 );

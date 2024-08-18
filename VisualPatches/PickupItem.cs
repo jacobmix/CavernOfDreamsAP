@@ -24,10 +24,8 @@ namespace CoDArchipelago.VisualPatches
 
         public PickupItem()
         {
-            Cutscene getItemCutscene = GetItemCutscene();
-
-            fishFoodObject = CreateFishFoodObject(getItemCutscene);
-            ladyOpalEggObjects = CreateLadyOpalEggObjects(getItemCutscene);
+            fishFoodObject = CreateFishFoodObject();
+            ladyOpalEggObjects = CreateLadyOpalEggObjects();
 
             replacementMap = new() {
                 {"ITEM_FISH_FOOD", fishFoodObject},
@@ -37,21 +35,7 @@ namespace CoDArchipelago.VisualPatches
             };
         }
 
-        Cutscene GetItemCutscene()
-        {
-            Transform getItemCutsceneObject = GameScene.FindInScene("LAKE", "Bedroom/Cutscenes/GetFishFoodCutscene");
-            getItemCutsceneObject.GetComponentInChildren<CutscenePlayerAnimEvent>().start = 1;
-            getItemCutsceneObject.name = "GetItemCutscene";
-            getItemCutsceneObject.SetParent(Container, false);
-            Cutscene getItemCutscene = getItemCutsceneObject.GetComponent<Cutscene>();
-            Cutscenes.Patching.PatchCutscene(getItemCutscene, Cutscenes.WLOptions.Interrupt, "PlayerGetItemPose");
-            getItemCutscene.durationAfterFinal = 45;
-            getItemCutscene.destroyOnFinish = false;
-
-            return getItemCutscene;
-        }
-
-        GameObject[] CreateLadyOpalEggObjects(Cutscene getItemCutscene)
+        GameObject[] CreateLadyOpalEggObjects()
         {
             Transform ladyOpalEggsHolder = GameScene.FindInScene("PALACE", "Valley (Main)/Collectibles/PrincessCollectiblesHolder");
             GameObject[] ladyOpalEggObjects = new GameObject[3];
@@ -60,14 +44,14 @@ namespace CoDArchipelago.VisualPatches
                 ladyOpalEggObjects[i] = GameObject.Instantiate(ladyOpalEggsHolder.GetChild(i).gameObject, Container);
                 ladyOpalEggObjects[i].name = "LadyOpalEgg" + (i + 1);
                 Collectible col = ladyOpalEggObjects[i].GetComponent<Collectible>();
-                col.cutscene = getItemCutscene;
+                col.cutscene = ItemCutscene;
                 col.type = Collectible.CollectibleType.ITEM;
             }
 
             return ladyOpalEggObjects;
         }
 
-        GameObject CreateFishFoodObject(Cutscene getItemCutscene)
+        GameObject CreateFishFoodObject()
         {
             Transform fishFoodHolder = GameScene.FindInScene("LAKE", "Bedroom/Collectibles/FishFoodHolder");
             GameObject fishFoodObject = GameObject.Instantiate(fishFoodHolder.Find("Fish Food").gameObject, Container);
@@ -76,7 +60,7 @@ namespace CoDArchipelago.VisualPatches
             CollectibleItem collectibleItem = fishFoodObject.GetComponent<CollectibleItem>();
             collectibleItem.model = fishFoodObject.transform.Find("FishfoodHolder").gameObject;
             collectibleItem.type = Collectible.CollectibleType.ITEM;
-            collectibleItem.cutscene = getItemCutscene;
+            collectibleItem.cutscene = ItemCutscene;
             return fishFoodObject;
         }
     }

@@ -21,6 +21,8 @@ namespace CoDArchipelago.APClient
         static ConcurrentQueue<(string, Action)> mainThreadQueue;
         static MainThreadExecutor executor;
 
+        // public static readonly Version version = new(1, 8, 1);
+
         static string playerName;
         static string address;
         static int port;
@@ -139,7 +141,7 @@ namespace CoDArchipelago.APClient
                 }));
             }
 
-            MiscPatches.NoJesterBootsCarry.allowFun = (bool)slotData["allowFun"];
+            NoFun.NoFun.enabled = !(bool)slotData["allowFun"];
         }
 
         class StartGame : InstantiateOnGameSceneLoad
@@ -221,7 +223,7 @@ namespace CoDArchipelago.APClient
                 bool shouldJingle = !(inFirstLoop || item.Player.Slot == 0);
 
                 if (item.ItemName == "Shroom") {
-                    if (!inFirstLoop || (slot != item.Player.Slot))
+                    if (!inFirstLoop && slot == item.Player.Slot)
                         return;
                     CollectShroom(shouldJingle);
                     return;
