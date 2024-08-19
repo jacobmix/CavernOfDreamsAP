@@ -85,6 +85,8 @@ namespace CoDArchipelago.LocationPatches
                 collider.isTrigger = true;
                 collider.tag = "NotPlayer";
 
+                MiscPatches.NoCarryableCollision.SetCollision(carryable.GetComponent<ReplaceEmitter>().prefab, false);
+
                 var ts = carryable.gameObject.GetComponent<TwoState>();
                 ts.flag = carryableFlag;
             }

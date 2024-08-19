@@ -7,7 +7,7 @@ namespace CoDArchipelago.NoFun
 {
     static class NoJesterBootsCarry
     {
-        static bool IsFunAllowed()
+        public static bool IsFunAllowed()
             => APClient.Client.SlotData.allowFun || FunInDeepWoods.insideDeepWoods;
 
         [HarmonyPatch(typeof(HoverBoots), nameof(HoverBoots.Collect))]
