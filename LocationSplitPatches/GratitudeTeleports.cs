@@ -91,7 +91,7 @@ namespace CoDArchipelago.LocationSplitPatches
                 modelHolder.GetComponent<Activation>().Activate();
             }
 
-            [LoadOrder(-1)]
+            [LoadOrder(Int32.MinValue+1)]
             public PatchTeleports()
             {
                 foreach (var info in gratitudeTeleportInfos) {
@@ -102,6 +102,10 @@ namespace CoDArchipelago.LocationSplitPatches
                     InitializePortal(otherPortal, info.teleportFlag);
 
                     MyItem.RegisterTrigger(info.teleportFlag, ActivatePortalFactory(nestPortal, otherPortal));
+                }
+
+                if (!APClient.Client.SlotData.splitGratitudeAndTeleports) {
+                    LinkGratitudeWithTeleports.RegisterLinks();
                 }
             }
         }

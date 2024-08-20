@@ -121,6 +121,7 @@ namespace CoDArchipelago.APClient
             public static bool dropCarryables;
             public static bool allowFun;
             public static bool deathLink;
+            public static bool splitGratitudeAndTeleports;
         }
 
         static void ProcessSlotData(Dictionary<string, object> slotData)
@@ -133,10 +134,7 @@ namespace CoDArchipelago.APClient
                 MiscPatches.EntranceRando.SetEntranceMap(entranceMap);
             }
 
-            bool splitGratitudeAndTeleports = (bool)slotData["splitGratitude"];
-            if (!splitGratitudeAndTeleports) {
-                LocationSplitPatches.GratitudeTeleports.LinkGratitudeWithTeleports.RegisterLinks();
-            }
+            SlotData.splitGratitudeAndTeleports = (bool)slotData["splitGratitude"];
 
             var pityItems = (List<string>)((JArray)slotData["pityItems"]).ToObject(typeof(List<string>));
             if (pityItems.Count > 0) {
