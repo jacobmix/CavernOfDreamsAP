@@ -13,7 +13,7 @@ start_region_names = {
 
     SL.option_lostleaf_lobby: "CAVE.LostleafLobby.Main",
     SL.option_armada_lobby: "CAVE.ArmadaLobby.Main",
-    SL.option_prismic_lobby: "CAVE.PalaceLobby.Main",
+    SL.option_prismic_lobby: "CAVE.PalaceLobby.PrismicEntryPlatform",
     SL.option_gallery_lobby: "CAVE.GalleryLobby.Main",
 
     SL.option_lostleaf_lake: "LAKE.LostleafLake.Main",
