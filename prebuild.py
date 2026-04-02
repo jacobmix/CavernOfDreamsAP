@@ -48,7 +48,8 @@ if __name__ == "__main__":
       warp_path = "null" if entrance.warp_path is None else '"' + entrance.warp_path + '"'
       dest_path = "null" if entrance.dest_path is None else '"' + entrance.dest_path + '"'
 
-      accum.append('{' + f"{entrance_name_and_path(entrance).replace("'", '"')},({warp_path},{dest_path})" + '},')
+      name_path = entrance_name_and_path(entrance).replace("'", '"')
+      accum.append('{' + f"{name_path},({warp_path},{dest_path})" + '},')
       pass
     accum.append("};")
 
