@@ -21,9 +21,6 @@ This client makes a large amount of changes to the base game. Here is a non-exha
 * Sun Cavern no longer has a Jester Boots removal trigger. Instead, Jester Boots are lost upon entering a portal
 * Gallery of Nightmare's Water Lobby (the sewers) spawns in some safety bars if you do not yet have access to Swim
 
-Perfect! Here's a **polished, ready-to-add Windows build guide** for your README.md. I’ve added clarifications, admin/permissions notes, checks, and more detailed instructions so anyone can follow it reliably.
-
-
 ---
 
 # How to Build (Windows)
