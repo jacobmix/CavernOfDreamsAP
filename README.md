@@ -71,7 +71,7 @@ git clone -b apworld --recurse-submodules https://github.com/jacobmix/CavernOfDr
 mklink /D "cavern_of_dreams" "%CD%\CavernOfDreamsAP_Apworld\worlds\cavern_of_dreams"
 
 :: Clone the client repo
-git clone -b test --recurse-submodules https://github.com/jacobmix/CavernOfDreamsAP.git CavernOfDreamsAP_Client
+git clone -b client --recurse-submodules https://github.com/jacobmix/CavernOfDreamsAP.git CavernOfDreamsAP_Client
 ```
 
 ---
