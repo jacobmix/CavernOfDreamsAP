@@ -65,13 +65,13 @@ Open **Command Prompt as Administrator**, then:
 
 ```bat
 :: Clone the AP world repo
-git clone -b apworld --recurse-submodules https://github.com/jacobmix/CavernOfDreamsAP.git CavernOfDreamsAP_Apworld
+git clone -b apworld_test --recurse-submodules https://github.com/jacobmix/CavernOfDreamsAP.git CavernOfDreamsAP_Apworld
 
 :: Create a symlink to the world folder for ease of access (relative to your current directory)
 mklink /D "cavern_of_dreams" "%CD%\CavernOfDreamsAP_Apworld\worlds\cavern_of_dreams"
 
 :: Clone the client repo
-git clone -b test --recurse-submodules https://github.com/jacobmix/CavernOfDreamsAP.git CavernOfDreamsAP_Client
+git clone -b client_test --recurse-submodules https://github.com/jacobmix/CavernOfDreamsAP.git CavernOfDreamsAP_Client
 ```
 
 ---
