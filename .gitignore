@@ -30,6 +30,7 @@
 *.apsave
 *.BIN
 *.puml
+*.symlink
 
 setups
 build
@@ -63,6 +64,7 @@ Output Logs/
 /data/user.kv
 /datapackage
 /custom_worlds
+/worlds/cavern_of_dreams/ap_generated
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
