@@ -4,10 +4,10 @@ This folder will contain generated data from the cavern_of_dreams_ap_logic gener
 
 ## Required files
 
-You need py files `data.py`, `entrance_rando.py`, and `regions.py`.
-From running: `python -m cavern_of_dreams_ap_logic.generate_ap_data`
-In the root folder of the client repo. A folder up from `cavern_of_dreams_ap_logic`
-Then files should show up in `cavern_of_dreams_ap_logic\ap_generated`
+You need py files `data.py`, `entrance_rando.py`, and `regions.py`.  
+From running: `mkdir "cavern_of_dreams_ap_logic\ap_generated" 2>nul && python -m cavern_of_dreams_ap_logic.generate_ap_data`  
+In the root folder of the client repo. A folder up from `cavern_of_dreams_ap_logic`  
+Then files should show up in `cavern_of_dreams_ap_logic\ap_generated`  
 
 ## Quick Setup (Recommended)
 
